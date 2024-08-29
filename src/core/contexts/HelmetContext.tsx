@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
+import { BUSINESS_NAME } from "@client/config";
 
 const helmetContext = React.createContext({})
 
 const HelmetProvider = (props: any) => {
 
-    const [title, setTitle] = useState("Hello")
+    const [title, setTitle] = useState(BUSINESS_NAME)
     const [meta, setMeta] = useState([])
     const [link, setLink] = useState([])
     const [script, setScript] = useState([])
