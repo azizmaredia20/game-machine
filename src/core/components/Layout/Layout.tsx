@@ -2,14 +2,12 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
 
-import styles from './Layout.module.scss'
-
 const Layout: React.FC<LayoutProps> = (props) => {
 
     return (
         <>
-            <nav className={styles.navWrapper}>
-                <ul className={styles.nav}>
+            <nav className="">
+                <ul className="">
                     <li>
                         <NavLink to={"/"}>Home</NavLink>
                     </li>

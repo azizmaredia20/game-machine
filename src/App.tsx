@@ -1,12 +1,13 @@
 import { Helmet } from 'react-helmet-async'
 import HelmetProvider from '@core/contexts/HelmetContext'
+import { BUSINESS_NAME } from './config'
 
 function App(props: any) {
 
 	return (
 		<>
 			<Helmet>
-				<title>ViteSSR + React + Helmet</title>
+				<title>{ BUSINESS_NAME }</title>
 			</Helmet>
 
 			<HelmetProvider>
