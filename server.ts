@@ -98,7 +98,6 @@ const createServer = async () => {
 
         } catch (e: any) {
             !isProd && vite.ssrFixStacktrace(e)
-            console.log(e.stack)
             res.status(500).end(e.stack)
         }
     })
