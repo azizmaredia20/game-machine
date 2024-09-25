@@ -42,3 +42,5 @@ export const registerAction = async ({ request }: { request: Request }): Promise
     return validationErrors;
   }
 };
+
+export * from './gameAction';

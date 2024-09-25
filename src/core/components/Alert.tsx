@@ -5,8 +5,8 @@ export default function Alert({ type, message }: AlertProps) {
 
   const hideAlert = () => {
     setVisible(false);
-  }
-  
+  };
+
   if (isVisible) {
     return (
       <>
@@ -16,9 +16,10 @@ export default function Alert({ type, message }: AlertProps) {
             role="alert"
           >
             <strong className="font-bold text-sm">Success!</strong>
-            <span className="block text-sm sm:inline max-sm:mt-2 max-sm:ml-0 ml-4 mr-8">
-              { message }
-            </span>
+            <span
+              className="block text-sm sm:inline max-sm:mt-2 max-sm:ml-0 ml-4 mr-8"
+              dangerouslySetInnerHTML={{ __html: message }}
+            />
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="w-7 hover:bg-green-200 rounded-lg transition-all p-2 cursor-pointer fill-green-500 absolute right-4 top-1/2 -translate-y-1/2"
@@ -36,16 +37,17 @@ export default function Alert({ type, message }: AlertProps) {
             </svg>
           </div>
         )}
-  
+
         {type === "WARNING" && (
           <div
             className="bg-yellow-100 text-yellow-800 p-4 rounded-lg relative"
             role="alert"
           >
             <strong className="font-bold text-sm">Warning!</strong>
-            <span className="block text-sm sm:inline max-sm:mt-2 max-sm:ml-0 ml-4 mr-8">
-              { message }
-            </span>
+            <span
+              className="block text-sm sm:inline max-sm:mt-2 max-sm:ml-0 ml-4 mr-8"
+              dangerouslySetInnerHTML={{ __html: message }}
+            />
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="w-7 hover:bg-yellow-200 rounded-lg transition-all p-2 cursor-pointer fill-yellow-500 absolute right-4 top-1/2 -translate-y-1/2"
@@ -63,16 +65,19 @@ export default function Alert({ type, message }: AlertProps) {
             </svg>
           </div>
         )}
-  
+
         {type === "ERROR" && (
           <div
             className="bg-red-100 text-red-800  p-4 rounded-lg relative"
             role="alert"
           >
-            <strong className="font-bold text-sm">Error!</strong>
-            <span className="block text-sm sm:inline max-sm:mt-2 max-sm:ml-0 ml-4 mr-8">
-              { message }
-            </span>
+            <strong className="font-bold text-sm">
+              Error! <br />
+            </strong>
+            <span
+              className="block text-sm sm:inline max-sm:mt-2 max-sm:ml-0 ml-4 mr-8"
+              dangerouslySetInnerHTML={{ __html: message }}
+            />
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="w-7 hover:bg-red-200 rounded-lg transition-all p-2 cursor-pointer fill-red-500 absolute right-4 top-1/2 -translate-y-1/2"
@@ -90,16 +95,17 @@ export default function Alert({ type, message }: AlertProps) {
             </svg>
           </div>
         )}
-  
+
         {type === "INFO" && (
           <div
             className="bg-blue-100 text-blue-800 0 p-4 rounded-lg relative"
             role="alert"
           >
             <strong className="font-bold text-sm">Info!</strong>
-            <span className="block text-sm sm:inline max-sm:mt-2 max-sm:ml-0 ml-4 mr-8">
-              { message }
-            </span>
+            <span
+              className="block text-sm sm:inline max-sm:mt-2 max-sm:ml-0 ml-4 mr-8"
+              dangerouslySetInnerHTML={{ __html: message }}
+            />
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="w-7 hover:bg-blue-200 rounded-lg transition-all p-2 cursor-pointer fill-blue-500 absolute right-4 top-1/2 -translate-y-1/2"

@@ -1,16 +1,16 @@
 import useHelmet from '@hooks/useHelmet';
 import React, { useEffect } from 'react';
 
-const About: React.FC<AboutProps> = (props) => {
+const Expenses: React.FC<ExpensesProps> = (props) => {
     return (
         <>
-            <h1>About Us</h1>
+            <h1>Expenses Us</h1>
         </>
     )
 }
 
-interface AboutProps {
+interface ExpensesProps {
     [key: string]: any
 }
 
-export default About;
+export default Expenses;

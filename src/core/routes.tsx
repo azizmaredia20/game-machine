@@ -5,12 +5,13 @@ import loadable from '@loadable/component'
 import Login from "@screens/Auth/Login";
 import Register from "@screens/Auth/Register";
 import Layout from "@core/components/Layout/Layout";
-import Home from "@screens/Home/Home";
-import homeLoader from "@loaders/homeLoader";
-import About from "@screens/About/About";
-import { loginAction, registerAction } from "./actions";
+import gameLoader from "@loaders/gameLoader";
+import Expenses from "@screens/Expenses/Expenses";
+import Spinner from "@core/components/Spinner";
+import { loginAction, registerAction, gameAction } from "./actions";
 
-const Contact = loadable(() => import("@screens/Contact/Contact"), { fallback: <div>Loading...</div> });
+const Verify = loadable(() => import("@screens/Verify/Verify"), { fallback: <div><Spinner /></div> });
+const Game = loadable(() => import("@screens/Game/Game"), { fallback: <div><Spinner /></div> });
 
 const routes: RouteObject[] = [
     {
@@ -26,18 +27,25 @@ const routes: RouteObject[] = [
     {
         path: "/",
         element: <Layout />,
+        action: gameAction,
         children: [
             {
                 index: true,
-                element: <Home />,
-                loader: homeLoader
-            }, {
-                path: "about",
-                element: <About />,
+                element: <Game />,
+                loader: gameLoader,
+                action: gameAction,
             },
             {
-                path: "contact",
-                element: <Contact />
+                path: "expenses",
+                element: <Expenses />,
+            },
+            {
+                path: "verify",
+                element: <Verify />
+            },
+            {
+                path: "reports",
+                element: <Verify />
             }
         ]
     }

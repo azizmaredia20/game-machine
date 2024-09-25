@@ -2,23 +2,23 @@ import useHelmet from '@hooks/useHelmet';
 import React, { useEffect } from 'react';
 
 
-const Contact: React.FC<ContactProps> = (props) => {
+const Verify: React.FC<VerifyProps> = (props) => {
 
     const helmet = useHelmet()
 
     useEffect(() => {
-        helmet.setTitle("Contact")
+        helmet.setTitle("Verify")
     }, [helmet])
 
     return (
         <>
-            <h1>Contact Page</h1>
+            <h1>Verify Page</h1>
         </>
     )
 }
 
-interface ContactProps {
+interface VerifyProps {
     [key: string]: any
 }
 
-export default Contact
+export default Verify

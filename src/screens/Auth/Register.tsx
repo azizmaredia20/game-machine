@@ -1,9 +1,9 @@
 import React, { useState, ChangeEvent } from 'react';
 import { Form, useActionData, useSearchParams } from 'react-router-dom';
 
-import Input from '@components/Input';
-import PasswordInput from '@components/PasswordInput';
-import Alert from '@components/Alert';
+import Input from '@core/components/Form/Input';
+import PasswordInput from '@core/components/Form/PasswordInput';
+import Alert from '@core/components/Alert';
 import { ADMIN_KEY } from '@client/config';
 
 const Register: React.FC<RegisterProps> = (props) => {
@@ -35,7 +35,7 @@ const Register: React.FC<RegisterProps> = (props) => {
               <h2 className="text-gray-800 text-center text-2xl font-bold">
                 Register
               </h2>
-              <Form method="post" action="/register" className="mt-8 space-y-4">
+              <Form method="post" action="/register" className="mt-8 space-y-4" noValidate>
                 {!!validationErrors && (
                   <Alert type="ERROR" message={validationErrors?.message} />
                 )}

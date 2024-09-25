@@ -51,7 +51,7 @@ export const register = async (req: Request, res: Response): Promise<Response<ob
       username: req?.body?.username,
       password: await bcrypt.hash(req?.body?.password, SALT_ROUNDS),
       role: req?.body?.role,
-    });``
+    });
 
     return res.status(201).json({
       message: "user created",
