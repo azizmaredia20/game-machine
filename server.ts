@@ -2,11 +2,10 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import express from 'express';
-import dotenv from 'dotenv'
+import cookieParser from 'cookie-parser';
 
-import api from './server/app.js';
+import apiRouter, { connectDB } from './server/app.js';
 
-dotenv.config()
 const __dirname: string = path.dirname(fileURLToPath(import.meta.url));
 const isTest = process.env.VITEST;
 const isProd = process.env.NODE_ENV === 'production'
@@ -18,9 +17,15 @@ const indexProd: string = isProd
     ? fs.readFileSync(resolve('client/index.html'), 'utf-8')
     : ''
 
+// Connect to DB
+connectDB();
+
 const createServer = async () => {
 
     const app = express();
+
+    app.use(express.json());
+    app.use(cookieParser());
 
     let vite: any;
 
@@ -52,9 +57,12 @@ const createServer = async () => {
     }
 
     // api routes
-    app.use('/api', api.router)
+    app.use('/api', apiRouter);
 
-    app.use('*', async (req, res) => {
+    app.use('*', async (req, res, next) => {
+        if (req.originalUrl.includes('/api')){
+            return next();
+        } 
         try {
 
             const url = req.originalUrl;

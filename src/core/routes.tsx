@@ -8,6 +8,7 @@ import Layout from "@core/components/Layout/Layout";
 import Home from "@screens/Home/Home";
 import homeLoader from "@loaders/homeLoader";
 import About from "@screens/About/About";
+import { loginAction, registerAction } from "./actions";
 
 const Contact = loadable(() => import("@screens/Contact/Contact"), { fallback: <div>Loading...</div> });
 
@@ -15,10 +16,12 @@ const routes: RouteObject[] = [
     {
         path: "/login",
         element: <Login />,
+        action: loginAction
     },
     {
         path: "/register",
         element: <Register />,
+        action: registerAction
     },
     {
         path: "/",
