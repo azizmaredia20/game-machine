@@ -1,6 +1,8 @@
 import { Router } from 'express';
-import { game } from '../controllers';
+import { readGameData, readGameDataByMachine, postGameData } from '../controllers';
 
 export const gameRouter = Router();
 
-gameRouter.post('/game', game);
+gameRouter.get('/game', readGameData);
+gameRouter.get('/game/:machineNo', readGameDataByMachine);
+gameRouter.post('/game', postGameData);

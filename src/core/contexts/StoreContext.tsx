@@ -1,8 +1,9 @@
-import React, { useState, createContext, FC, ReactNode, useContext } from "react";
+import React, { useState, createContext, FC } from "react";
 import { STORES } from "@client/config";
 
 interface store {
-  name: string;
+  label: string;
+  value: string;
 }
 
 export interface StoreContextType {

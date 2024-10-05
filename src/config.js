@@ -1,8 +1,9 @@
 export const BUSINESS_NAME = "GAME MACHINE";
 export const TOTAL_MACHINE = 20;
+export const SHIFT_NO = 3;
 export const STORES = [
-  { name: 'Lucky Penny' },
-  { name: 'Good Times' }
+  { label: 'Lucky Penny', value: 'LUCKYPENNY' },
+  { label: 'Good Times', value: 'GOODTIMES' }
 ];
 
 // SECRETS

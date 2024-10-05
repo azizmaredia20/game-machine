@@ -1,15 +1,16 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import { NavLink } from "react-router-dom";
+
 import { Header } from "./Header";
+import SelectStore from "./SelectStore";
+
 
 const Layout: React.FC<LayoutProps> = (props) => {
   return (
     <>
       <Header />
-      <div className="container mx-auto p-8">
-        <Outlet />
-      </div>
+      <SelectStore />
+      <Outlet />
     </>
   );
 };

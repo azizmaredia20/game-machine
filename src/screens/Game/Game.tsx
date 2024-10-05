@@ -1,119 +1,145 @@
-import React, { useState, ChangeEvent } from "react";
-import { Form, useActionData } from "react-router-dom";
-import DatePicker from "react-datepicker";
+import React, { useState, FormEvent, useEffect } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 
-import Input from "@core/components/Form/Input";
+import Input, { inputValType } from "@core/components/Form/Input";
+import Select, { selectedValueType } from "@core/components/Form/Select";
 import Alert from "@core/components/Alert";
 import { TOTAL_MACHINE } from "@client/config";
+import Datepicker from "@core/components/Form/Datepicker";
+import useStoreContext from "@hooks/useStoreContext";
+import { gameDataValidation, submitGameForm, loadSubmittedData, GameResult } from "@core/actions/gameAction";
+import { formatDate } from '@utils/index';
+
+type valueType = string | number | readonly string[] | undefined | null;
 
 const Game: React.FC<GameProps> = (_props) => {
-  const formError = useActionData();
-  console.log('FormError', formError)
-  const [formData, setFormData] = useState({
-    date: new Date().toISOString(),
-    machineNo: 0,
+  const [ validationMessage, setValidationMessage ] = useState<string | undefined>();
+  const [submittedMachines, setSubmittedMachines] = useState<number[] | null>(null);
+  const { store } = useStoreContext();
+
+  const defaultFormData = {
+    storeName: store.value,
+    date: formatDate(new Date()),
+    machineNo: 1,
     currentIn: null,
     currentOut: null,
-  });
+  };
+  const [formData, setFormData] = useState(defaultFormData);
 
-  const handleChange = (
-    event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>
-  ) => {
-    const data = {
+  useEffect(() => {
+    (async () => {
+      const submittedMachines = await loadSubmittedData(formData)
+      if (Array.isArray(submittedMachines)) {
+        const machines = submittedMachines.map(({ machineNo }: GameResult) => machineNo )
+        setSubmittedMachines(machines);
+      }
+    })();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formData.date, formData.storeName]);
+
+  const handleChange = async ({
+    name,
+    value,
+  }: {
+    name: string;
+    value: inputValType | selectedValueType;
+  }) => {
+    const data = { ...{
       ...formData,
-      [event.target.name]: event.target.value,
-    };
+      [name]: value,
+    } };
+
+    if (name === 'machineNo' && formData.machineNo !== value) {
+      data.currentIn = null;
+      data.currentOut = null;
+    }
 
     setFormData(data);
   };
 
-  const handleDateChange = (date: Date | null) => {
-    const res = {
-      ...formData,
-      date: date?.toISOString(),
-    };
+  const handleSubmitForm = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setValidationMessage('');
 
-    console.log("handleDateChange", res);
-    // @ts-expect-error:  Type 'null' is not assignable to type 'Date'
-    setFormData(res);
-  };
+    const { isValid, message } = gameDataValidation(formData);
+
+    if (isValid) {
+      const submitRes = await submitGameForm(formData);
+
+      if (submitRes instanceof Error) {
+        setValidationMessage(submitRes.message);
+      } else {
+        const updateSubmitteMachines = [ ...submittedMachines, parseInt(submitRes.machineNo)];
+        setSubmittedMachines(updateSubmitteMachines);
+      }
+    } else {
+      setValidationMessage(message);
+    }
+  }
 
   return (
-    <>
+    <div className="container mx-auto p-8 text-center">
       <div className="inline-block">
         {Array.from({ length: TOTAL_MACHINE }, (_, i) => i + 1).map(
           (number) => (
             <div
               key={`machine-${number}`}
-              className="bg-blue-600 px-2 py-1 text-xs text-white rounded ml-2 float-left w-7 m-2 text-center"
+              className={`${submittedMachines && submittedMachines.includes(number) ? 'bg-red-600': 'bg-blue-600' } 
+                px-2 py-1 text-xs text-white rounded ml-2 float-left w-7 m-2 text-center`}
             >
               {number}
             </div>
           )
         )}
       </div>
-      <Form method="post" action="/?index" className="mt-8 space-y-4" noValidate>
-        {!!formError?.message && (
-          <Alert type="ERROR" message={formError?.message} />
+      <form className="mt-8 blok text-left max-w-lg mx-auto" noValidate onSubmit={handleSubmitForm}>
+        {!!validationMessage && (
+          <Alert type="ERROR" message={validationMessage} />
         )}
-        <div>
-          <label className="text-gray-800 text-sm mb-2 block">
-            Select Today's Date
-          </label>
-          <div className="relative flex items-center">
-            <DatePicker
-              className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-              showIcon
-              name="date"
-              selected={formData.date}
-              minDate={new Date()}
-              onChange={handleDateChange}
-            />
-          </div>
-        </div>
-        <div>
-          <label className="text-gray-800 text-sm mb-2 block">
-            Select Machine Number
-          </label>
-          <div className="relative flex items-center">
-            <select
-              name="machineNo"
-              value={formData.machineNo}
-              onChange={handleChange}
-              className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-            >
-              <option value={0}>Select Option</option>
-              {Array.from({ length: TOTAL_MACHINE }, (x, i) => i + 1).map(
-                (number) => (
-                  <option
-                    key={`machine-${number}`}
-                    value={number}
-                  >{`Machine ${number}`}</option>
-                )
-              )}
-            </select>
-          </div>
-        </div>
+
+        {/* <input type="hidden" id="storeName" name="storeName" value={store?.value} /> */}
+
+        <Datepicker
+          label="Select Today's Date"
+          name="date"
+          defaultValue={new Date} 
+          onChange={handleChange}
+        />
+
+        <Select
+          label="Select Machine Number"
+          name="machineNo"
+          className="py-2"
+          defaultValue={formData?.machineNo}
+          labelClassName="text-gray-800 text-sm mb-2 block"
+          onChange={handleChange}
+          options={Array.from({ length: TOTAL_MACHINE }, (_, i) => i + 1).map(
+            (no) => ({ label: `Machine ${no}`, value: no })
+          )}
+        />
 
         <Input
+          className="py-2"
           label="Current In"
           name="currentIn"
           type="number"
           placeholder="Enter Current In Value"
           isRequired={true}
+          value={formData?.currentIn ?? ''}
           autoComplete="amount"
-          handleChange={handleChange}
+          onChange={handleChange}
         />
 
         <Input
+          className="py-2"
           label="Current Out"
           name="currentOut"
           type="number"
           placeholder="Enter Current Out Value"
           isRequired={true}
+          value={formData?.currentOut ?? ''}
           autoComplete="amount"
-          handleChange={handleChange}
+          onChange={handleChange}
         />
 
         <div className="!mt-8">
@@ -124,8 +150,8 @@ const Game: React.FC<GameProps> = (_props) => {
             Submit
           </button>
         </div>
-      </Form>
-    </>
+      </form>
+    </div>
   );
 };
 

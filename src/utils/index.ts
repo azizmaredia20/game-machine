@@ -17,3 +17,9 @@ export async function callApi<T>(url: string, init: object): Promise<T> {
     }
   }
 }
+
+export const formatDate = (date: Date, locale?: string) : string => new Intl.DateTimeFormat("en-US", {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit"
+}).format(date);

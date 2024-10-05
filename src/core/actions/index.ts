@@ -44,3 +44,4 @@ export const registerAction = async ({ request }: { request: Request }): Promise
 };
 
 export * from './gameAction';
+export * from './verifyAction';
