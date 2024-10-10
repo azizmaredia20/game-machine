@@ -1,17 +1,23 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { logOutAction } from "@client/core/actions"
 
 export interface HeaderProps {}
 
 const menuItemns = [
   { display: "Game", link: "/" },
+  { display: "Insert Data", link:"/admin-data" },
+  { display: "Create Game Room", link:"/game-room" },
+  { display: "Create Users", link:"/create-user" },
   { display: "Expenses", link: "/expenses" },
   { display: "Cash Verification", link: "/verify" },
-  { display: "Reports", link: "/reports" },
+  { display: "Daily Report", link: "/report" },
+  { display: "Summary Report", link:"/summary" }
 ];
 
 export function Header(props: HeaderProps) {
   const [display, setDisplay] = useState("none");
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     if (display === "block") {
@@ -57,10 +63,10 @@ export function Header(props: HeaderProps) {
               Login
             </a>
           </button>
-          <button className="px-4 py-2 text-sm rounded-sm font-bold text-white border-2 border-[#007bff] bg-[#007bff] transition-all ease-in-out duration-300 hover:bg-transparent hover:text-[#007bff]">
-            <a href="/register">
-              Log Out
-            </a>
+          <button
+            onClick={() => { logOutAction(navigate) }}
+            className="px-4 py-2 text-sm rounded-sm font-bold text-white border-2 border-[#007bff] bg-[#007bff] transition-all ease-in-out duration-300 hover:bg-transparent hover:text-[#007bff]">
+            Log Out
           </button>
 
           <button

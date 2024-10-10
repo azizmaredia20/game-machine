@@ -1,11 +1,11 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
 import UserModal from '../model/user';
 import { SALT_ROUNDS, COOKIE_JWT_KEY, SECRET_TOKEN } from '../config';
 
-export const login = async (req: Request, res: Response, next: NextFunction): Promise<Response<object>> => {
+export const login = async (req: Request, res: Response): Promise<Response<object>> => {
   try {
     const userExists = await UserModal.findOne({ username: req?.body?.username });
 
@@ -42,6 +42,19 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
     return res
       .status(401)
       .json({ message: 'Not able to Log In.' });
+  }
+}
+
+export const logout = async (req: Request, res: Response): Promise<Response<object>> => {
+  try {
+    return res
+      .clearCookie(COOKIE_JWT_KEY)
+      .status(200)
+      .json({ message: 'Log out successfully' });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: 'Not able to Log out.' });
   }
 }
 

@@ -43,7 +43,6 @@ export const loadSubmittedData = async (gameFormData: GameFormData) => {
 }
 
 export const submitGameForm = async (gameFormData: GameFormData) => {
-
   try {
     const params = new URLSearchParams();
     gameFormData?.storeName && params.append('storeName', gameFormData?.storeName);
@@ -71,6 +70,19 @@ export const submitGameForm = async (gameFormData: GameFormData) => {
     return e;
   }
 };
+
+export const updateGameForm = async (gameFormData: GameFormData) => {
+  try {
+    return await callApi(`/api/game/${gameFormData?.machineNo}`, {
+      method: "PUT",
+      body: JSON.stringify(gameFormData),
+      headers: { "Content-Type": "application/json", "trace-id": Date.now() },
+    });
+  } catch (e: any) {
+    console.log(`Error while update data for machine number ${gameFormData?.machineNo} - ${e.message}`);
+    return e;
+  }
+}
 
 export const gameDataValidation = (formData: GameFormData): Result => {
   const formError = { isValid: true, message: "" };

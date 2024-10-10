@@ -1,7 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import express from 'express';
+import express, { Express } from 'express';
 import cookieParser from 'cookie-parser';
 
 import apiRouter, { connectDB } from './server/app.js';
@@ -22,7 +22,7 @@ connectDB();
 
 const createServer = async () => {
 
-    const app = express();
+    const app: Express = express();
 
     app.use(express.json());
     app.use(cookieParser());

@@ -1,4 +1,4 @@
-import React, { useState, FormEvent, useEffect } from "react";
+import React, { useState, FormEvent, useEffect, MouseEventHandler } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 
 import Input, { inputValType } from "@core/components/Form/Input";
@@ -7,8 +7,8 @@ import Alert from "@core/components/Alert";
 import { TOTAL_MACHINE } from "@client/config";
 import Datepicker from "@core/components/Form/Datepicker";
 import useStoreContext from "@hooks/useStoreContext";
-import { gameDataValidation, submitGameForm, loadSubmittedData, GameResult } from "@core/actions/gameAction";
-import { formatDate } from '@utils/index';
+import { gameDataValidation, submitGameForm, updateGameForm, loadSubmittedData, GameResult } from "@core/actions/gameAction";
+import { formatDate, getPastDate } from '@utils/index';
 
 type valueType = string | number | readonly string[] | undefined | null;
 
@@ -58,18 +58,24 @@ const Game: React.FC<GameProps> = (_props) => {
   };
 
   const handleSubmitForm = async (event: FormEvent<HTMLFormElement>) => {
+    const formType = event?.nativeEvent?.submitter?.innerHTML;
     event.preventDefault();
     setValidationMessage('');
 
     const { isValid, message } = gameDataValidation(formData);
 
     if (isValid) {
-      const submitRes = await submitGameForm(formData);
-
-      if (submitRes instanceof Error) {
-        setValidationMessage(submitRes.message);
+      let res = null;
+      if (formType === 'Submit') {
+        res = await submitGameForm(formData);
       } else {
-        const updateSubmitteMachines = [ ...submittedMachines, parseInt(submitRes.machineNo)];
+        res = await updateGameForm(formData);
+      }
+
+      if (res instanceof Error) {
+        setValidationMessage(res.message);
+      } else if (formType === 'Submit') {
+        const updateSubmitteMachines = [...(submittedMachines as number[]), parseInt(res.machineNo)];
         setSubmittedMachines(updateSubmitteMachines);
       }
     } else {
@@ -102,6 +108,7 @@ const Game: React.FC<GameProps> = (_props) => {
         <Datepicker
           label="Select Today's Date"
           name="date"
+          minDate={new Date()}
           defaultValue={new Date} 
           onChange={handleChange}
         />
@@ -145,9 +152,16 @@ const Game: React.FC<GameProps> = (_props) => {
         <div className="!mt-8">
           <button
             type="submit"
-            className="w-full py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
+            className="w-full py-3 px-4 my-2 text-sm tracking-wide rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
           >
             Submit
+          </button>
+
+          <button
+            type="submit"
+            className="w-full py-3 px-4 my-2 text-sm tracking-wide rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
+          >
+            Update
           </button>
         </div>
       </form>

@@ -1,39 +1,34 @@
 import React, { useState } from "react";
-import { Form, useActionData } from "react-router-dom";
+import { useActionData } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 
 import Input, { inputValType } from "@core/components/Form/Input";
-import Select, { selectedValueType } from "@core/components/Form/Select";
 import Alert from "@core/components/Alert";
-import { TOTAL_MACHINE } from "@client/config";
 import Datepicker from "@core/components/Form/Datepicker";
 import useStoreContext from "@hooks/useStoreContext";
 
-interface ActionData {
-  message: string;
-}
+type valueType = string | number | readonly string[] | undefined | null;
 
 const Verify: React.FC<VerifyProps> = (_props) => {
-  const formError = useActionData();
   const { store } = useStoreContext();
 
   const [formData, setFormData] = useState({
+    storeName: store?.value,
     date: new Date().toISOString(),
-    machineNo: 0,
-    currentIn: null,
-    currentOut: null,
+    cashFromMachines: null,
+    cashInHand: null,
   });
 
-  const [ validationMessage, setValidationMessage ] = useState<string | null>(null);
-
-  type valueType = string | number | readonly string[] | undefined | null;
+  const [validationMessage, setValidationMessage] = useState<string | null>(
+    null
+  );
 
   const handleChange = ({
     name,
     value,
   }: {
     name: string;
-    value: inputValType | selectedValueType;
+    value: inputValType;
   }) => {
     const data = {
       ...formData,
@@ -43,54 +38,48 @@ const Verify: React.FC<VerifyProps> = (_props) => {
     setFormData(data);
   };
 
+  const handleSubmitForm = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setValidationMessage('');
+
+    const { isValid, message } = verifyDataValidation(formData);
+
+    if (isValid) {
+      const submitRes = await submitGameForm(formData);
+
+      if (submitRes instanceof Error) {
+        setValidationMessage(submitRes.message);
+      } else {
+        const updateSubmitteMachines = [ ...submittedMachines, parseInt(submitRes.machineNo)];
+        setSubmittedMachines(updateSubmitteMachines);
+      }
+    } else {
+      setValidationMessage(message);
+    }
+  }
+
 
   return (
     <div className="container mx-auto p-8 text-center">
-      <div className="inline-block">
-        {Array.from({ length: TOTAL_MACHINE }, (_, i) => i + 1).map(
-          (number) => (
-            <div
-              key={`machine-${number}`}
-              className="bg-blue-600 px-2 py-1 text-xs text-white rounded ml-2 float-left w-7 m-2 text-center"
-            >
-              {number}
-            </div>
-          )
+      <form className="mt-8 blok text-left max-w-lg mx-auto" noValidate onSubmit={handleSubmitForm}>
+        {!!validationMessage && (
+          <Alert type="ERROR" message={validationMessage} />
         )}
-      </div>
-      <Form method="post" action="/?index" className="mt-8 blok text-left max-w-lg mx-auto" noValidate>
-        {!!formError?.message && (
-          <Alert type="ERROR" message={formError?.message} />
-        )}
-
-        <input type="hidden" id="storeName" name="storeName" value={store?.value} />
 
         <Datepicker
           label="Select Today's Date"
           name="date"
-          minDate={new Date}
-          defaultValue={new Date} 
+          minDate={new Date()}
+          defaultValue={new Date()}
           onChange={handleChange}
-        />
-
-        <Select
-          label="Select Machine Number"
-          name="machineNo"
-          className="py-2"
-          defaultValue={formData?.machineNo}
-          labelClassName="text-gray-800 text-sm mb-2 block"
-          onChange={handleChange}
-          options={Array.from({ length: TOTAL_MACHINE }, (_, i) => i + 1).map(
-            (no) => ({ label: `Machine ${no}`, value: no })
-          )}
         />
 
         <Input
           className="py-2"
-          label="Current In"
-          name="currentIn"
+          label="Total Cash received from all machines"
+          name="cashFromMachines"
           type="number"
-          placeholder="Enter Current In Value"
+          placeholder="Total Cash received from all machine"
           isRequired={true}
           autoComplete="amount"
           onChange={handleChange}
@@ -98,10 +87,10 @@ const Verify: React.FC<VerifyProps> = (_props) => {
 
         <Input
           className="py-2"
-          label="Current Out"
-          name="currentOut"
+          label="Cash in hand after deduction"
+          name="cashInHand"
           type="number"
-          placeholder="Enter Current Out Value"
+          placeholder="Cash in hand after deduction"
           isRequired={true}
           autoComplete="amount"
           onChange={handleChange}
@@ -115,7 +104,7 @@ const Verify: React.FC<VerifyProps> = (_props) => {
             Submit
           </button>
         </div>
-      </Form>
+      </form>
     </div>
   );
 };

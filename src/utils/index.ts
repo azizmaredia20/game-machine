@@ -23,3 +23,8 @@ export const formatDate = (date: Date, locale?: string) : string => new Intl.Dat
   month: "2-digit",
   day: "2-digit"
 }).format(date);
+
+export const getPastDate = (date: Date = new Date(), noOfDays: number) => {
+  const past2DayMill =  (new Date(date)).getTime() - (2 * 24 * 60 * 1000);
+  return new Date(past2DayMill)
+}

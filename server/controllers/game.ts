@@ -4,7 +4,6 @@ import GameModel from "../model/game";
 export const readGameData = async (
   req: Request,
   res: Response,
-  next: NextFunction
 ): Promise<Response<object>> => {
   const queryParams = req.query;
   try {
@@ -26,7 +25,6 @@ export const readGameData = async (
 export const readGameDataByMachine = async (
   req: Request,
   res: Response,
-  next: NextFunction
 ): Promise<Response<object>> => {
   const machineNo = req.params.machineNo;
   const queryParams = req.query;
@@ -48,10 +46,30 @@ export const readGameDataByMachine = async (
   }
 };
 
+export const updateGameDataByMachine = async(req: Request, res: Response) => {
+  const machineNo = req?.params?.machineNo;
+  const reqBody = req?.body;
+
+  try {
+    const updatedRec = await GameModel.findOneAndUpdate(
+    { machineNo, date: reqBody?.date, storeName: reqBody?.storeName },
+    { currentIn: reqBody?.currentIn, currentOut: reqBody?.currentOut },
+    { new: true }
+  )
+
+    return res.status(200).json(updatedRec);
+  } catch(e) {
+    const message = `Failed to update data for machine ${machineNo} - ${e}`;
+    console.error(message);
+    return res.status(500).json({
+      message,
+    });
+  }
+}
+
 export const postGameData = async (
   req: Request,
   res: Response,
-  next: NextFunction
 ): Promise<Response<object>> => {
   const gameData = req?.body;
   const { machineNo } = gameData;
