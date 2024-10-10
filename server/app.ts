@@ -1,9 +1,11 @@
 import { Router } from 'express';
 import mongoose from "mongoose";
-import { authRouter } from './routes';
+import { authRouter, gameRouter, expensesRouter } from './routes';
 
 const apiRouter = Router();
 apiRouter.use(authRouter);
+apiRouter.use(gameRouter);
+apiRouter.use(expensesRouter);
 
 export function connectDB(): void {
   const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/gambling"

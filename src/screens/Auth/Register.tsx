@@ -1,9 +1,9 @@
 import React, { useState, ChangeEvent } from 'react';
 import { Form, useActionData, useSearchParams } from 'react-router-dom';
 
-import Input from '@components/Input';
-import PasswordInput from '@components/PasswordInput';
-import Alert from '@components/Alert';
+import Input, { inputValType } from '@core/components/Form/Input';
+import PasswordInput from '@core/components/Form/PasswordInput';
+import Alert from '@core/components/Alert';
 import { ADMIN_KEY } from '@client/config';
 
 const Register: React.FC<RegisterProps> = (props) => {
@@ -17,10 +17,10 @@ const Register: React.FC<RegisterProps> = (props) => {
     role: params.get('adminKey') === ADMIN_KEY ? 'ADMIN' : 'USER'
   });
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = ({ name, value }: { name: string; value: inputValType; }) => {
     const data = {
       ...formData,
-      [event.target.name]: event.target.value,
+      [name]: value,
     };
 
     setFormData(data);
@@ -35,7 +35,7 @@ const Register: React.FC<RegisterProps> = (props) => {
               <h2 className="text-gray-800 text-center text-2xl font-bold">
                 Register
               </h2>
-              <Form method="post" action="/register" className="mt-8 space-y-4">
+              <Form method="post" action="/register" className="mt-8 space-y-4" noValidate>
                 {!!validationErrors && (
                   <Alert type="ERROR" message={validationErrors?.message} />
                 )}
@@ -47,7 +47,7 @@ const Register: React.FC<RegisterProps> = (props) => {
                   placeholder="Enter user name"
                   isRequired={true}
                   autoComplete="username"
-                  handleChange={handleChange}
+                  onChange={handleChange}
                 />
 
                 <PasswordInput

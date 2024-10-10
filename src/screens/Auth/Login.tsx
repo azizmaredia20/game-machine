@@ -35,7 +35,7 @@ const Login: React.FC<LoginProps> = (props) => {
               <h2 className="text-gray-800 text-center text-2xl font-bold">
                 Sign in
               </h2>
-              <Form method="post" action="/login" className="mt-8 space-y-4">
+              <Form method="post" action="/login" className="mt-8 space-y-4" noValidate>
                 <div>
                   <label className="text-gray-800 text-sm mb-2 block">
                     User name

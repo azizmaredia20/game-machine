@@ -1,32 +1,22 @@
-import React from 'react';
-import { Outlet } from 'react-router-dom';
-import { NavLink } from 'react-router-dom';
+import React from "react";
+import { Outlet } from "react-router-dom";
+
+import { Header } from "./Header";
+import SelectStore from "./SelectStore";
+
 
 const Layout: React.FC<LayoutProps> = (props) => {
-
-    return (
-        <>
-            <nav className="">
-                <ul className="">
-                    <li>
-                        <NavLink to={"/"}>Home</NavLink>
-                    </li>
-                    <li>
-                        <NavLink to={"about"}>About</NavLink>
-                    </li>
-                    <li>
-                        <NavLink to={"contact"}>Contact</NavLink>
-                    </li>
-                </ul>
-            </nav>
-
-            <Outlet />
-        </>
-    )
-}
+  return (
+    <>
+      <Header />
+      <SelectStore />
+      <Outlet />
+    </>
+  );
+};
 
 interface LayoutProps {
-    [key: string]: any
+  [key: string]: any;
 }
 
 export default Layout;

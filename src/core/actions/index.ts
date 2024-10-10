@@ -1,4 +1,4 @@
-import { redirect } from "react-router-dom";
+import { NavigateFunction, redirect } from "react-router-dom";
 import { callApi } from "@utils/index";
 
 export const loginAction = async ({ request }: { request: Request }): Promise<Response> => {
@@ -17,6 +17,19 @@ export const loginAction = async ({ request }: { request: Request }): Promise<Re
 
   return redirect('/');
 }
+
+export const logOutAction = async (navigate: NavigateFunction) => {
+  try {
+    const res = await callApi('/api/logout', {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json', 'trace-id': Date.now() }
+    })
+    navigate('/login');
+  } catch(e) {
+    console.log(e)
+  }
+}
+
 
 export const registerAction = async ({ request }: { request: Request }): Promise<Response | object> => {
   const registerFormData = await request.formData();
@@ -42,3 +55,6 @@ export const registerAction = async ({ request }: { request: Request }): Promise
     return validationErrors;
   }
 };
+
+export * from './gameAction';
+export * from './verifyAction';

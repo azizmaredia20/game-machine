@@ -5,12 +5,17 @@ import loadable from '@loadable/component'
 import Login from "@screens/Auth/Login";
 import Register from "@screens/Auth/Register";
 import Layout from "@core/components/Layout/Layout";
-import Home from "@screens/Home/Home";
-import homeLoader from "@loaders/homeLoader";
-import About from "@screens/About/About";
+import CreateGameRoom from "@screens/Game/CreateGameRoom";
+import CreateUsers from "@screens/Game/CreateUsers";
+import DailyReport from "@screens/Report/DailyReport";
+import SummaryReport from "@screens/Report/SummaryReport";
+import gameLoader from "@loaders/gameLoader";
+import Spinner from "@core/components/Spinner";
 import { loginAction, registerAction } from "./actions";
 
-const Contact = loadable(() => import("@screens/Contact/Contact"), { fallback: <div>Loading...</div> });
+const Verify = loadable(() => import("@screens/Verify/Verify"), { fallback: <div><Spinner /></div> });
+const Game = loadable(() => import("@screens/Game/Game"), { fallback: <div><Spinner /></div> });
+const Expenses = loadable(() => import("@screens/Expenses/Expenses"), { fallback: <div><Spinner /></div> });
 
 const routes: RouteObject[] = [
     {
@@ -29,15 +34,36 @@ const routes: RouteObject[] = [
         children: [
             {
                 index: true,
-                element: <Home />,
-                loader: homeLoader
-            }, {
-                path: "about",
-                element: <About />,
+                element: <Game />,
+                loader: gameLoader,
             },
             {
-                path: "contact",
-                element: <Contact />
+                path: "/admin-data",
+                element: <Game />
+            },
+            {
+                path: "game-room",
+                element: <CreateGameRoom />
+            },
+            {
+                path: "create-user",
+                element: <CreateUsers />
+            },
+            {
+                path: "expenses",
+                element: <Expenses />,
+            },
+            {
+                path: "verify",
+                element: <Verify />,
+            },
+            {
+                path: "report",
+                element: <DailyReport />
+            },
+            {
+                path: "summary",
+                element: <SummaryReport />
             }
         ]
     }
