@@ -1,3 +1,4 @@
 export * from './auth';
 export * from './game';
-export * from './expenses'
+export * from './expenses';
+export * from './verify';

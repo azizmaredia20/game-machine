@@ -57,6 +57,8 @@ const Game: React.FC<GameProps> = (_props) => {
     setFormData(data);
   };
 
+  console.log('checking', getPastDate(undefined, 2));
+
   const handleSubmitForm = async (event: FormEvent<HTMLFormElement>) => {
     const formType = event?.nativeEvent?.submitter?.innerHTML;
     event.preventDefault();
@@ -108,7 +110,7 @@ const Game: React.FC<GameProps> = (_props) => {
         <Datepicker
           label="Select Today's Date"
           name="date"
-          minDate={new Date()}
+          minDate={getPastDate(undefined, 2)}
           defaultValue={new Date} 
           onChange={handleChange}
         />

@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { useActionData } from "react-router-dom";
+import React, { FormEvent, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 
 import Input, { inputValType } from "@core/components/Form/Input";
 import Alert from "@core/components/Alert";
 import Datepicker from "@core/components/Form/Datepicker";
 import useStoreContext from "@hooks/useStoreContext";
+import { verifyDataValidation, submitVerifyForm } from "@core/actions";
 
 type valueType = string | number | readonly string[] | undefined | null;
 
@@ -19,9 +19,7 @@ const Verify: React.FC<VerifyProps> = (_props) => {
     cashInHand: null,
   });
 
-  const [validationMessage, setValidationMessage] = useState<string | null>(
-    null
-  );
+  const [validationMessage, setValidationMessage] = useState<string | null>(null);
 
   const handleChange = ({
     name,
@@ -45,19 +43,15 @@ const Verify: React.FC<VerifyProps> = (_props) => {
     const { isValid, message } = verifyDataValidation(formData);
 
     if (isValid) {
-      const submitRes = await submitGameForm(formData);
+      const submitRes = await submitVerifyForm(formData);
 
       if (submitRes instanceof Error) {
         setValidationMessage(submitRes.message);
-      } else {
-        const updateSubmitteMachines = [ ...submittedMachines, parseInt(submitRes.machineNo)];
-        setSubmittedMachines(updateSubmitteMachines);
       }
     } else {
       setValidationMessage(message);
     }
   }
-
 
   return (
     <div className="container mx-auto p-8 text-center">
