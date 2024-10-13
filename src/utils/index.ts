@@ -18,13 +18,13 @@ export async function callApi<T>(url: string, init: object): Promise<T> {
   }
 }
 
-export const formatDate = (date: Date, locale?: string) : string => new Intl.DateTimeFormat("en-US", {
+export const formatDate = (date: Date | null, locale?: string) : string => new Intl.DateTimeFormat("en-US", {
   year: "numeric",
   month: "2-digit",
   day: "2-digit"
 }).format(date);
 
 export const getPastDate = (date: Date = new Date(), noOfDays: number) => {
-  const past2DayMill =  (new Date(date)).getTime() - (2 * 24 * 60 * 1000);
+  const past2DayMill =  (new Date(date)).getTime() - (2 * 24 * 60 * 60 * 1000);
   return new Date(past2DayMill)
 }

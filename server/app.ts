@@ -1,14 +1,15 @@
 import { Router } from 'express';
 import mongoose from "mongoose";
-import { authRouter, gameRouter, expensesRouter } from './routes';
+import { authRouter, gameRouter, expensesRouter, verifysRouter } from './routes';
 
 const apiRouter = Router();
 apiRouter.use(authRouter);
 apiRouter.use(gameRouter);
 apiRouter.use(expensesRouter);
+apiRouter.use(verifysRouter);
 
 export function connectDB(): void {
-  const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/gambling"
+  const MONGO_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/gameAccounting?directConnection=true&serverSelectionTimeoutMS=2000"
 
   try {
     mongoose.connect(MONGO_URI);
