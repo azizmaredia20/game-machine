@@ -13,9 +13,13 @@ const UserSchema = new Schema({
   role: {
     type: String,
     required: true,
+  },
+  stores: {
+    type: [String],
+    validate: (v: string | any[]) => Array.isArray(v) && v.length > 0,
   }
 });
 
-const UserModel = model('users', UserSchema);
+const UserModel = model('Users', UserSchema);
 
 export default UserModel;

@@ -1,4 +1,4 @@
-export async function callApi<T>(url: string, init: object): Promise<T> {
+export async function callApi<T>(url: string, init?: object): Promise<T> {
   try {
     const response = await fetch(url, init);
 
@@ -18,7 +18,7 @@ export async function callApi<T>(url: string, init: object): Promise<T> {
   }
 }
 
-export const formatDate = (date: Date | null, locale?: string) : string => new Intl.DateTimeFormat("en-US", {
+export const formatDate = (date: Date | null, locale: string = "en-US") : string => new Intl.DateTimeFormat(locale, {
   year: "numeric",
   month: "2-digit",
   day: "2-digit"

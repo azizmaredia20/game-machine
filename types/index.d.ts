@@ -15,3 +15,8 @@ type helmetContextType = {
     style: string | [];
     setStyle: (style: string | []) => void;
 }
+
+export type Store = {
+    readonly label: string;
+    readonly value: string;
+}

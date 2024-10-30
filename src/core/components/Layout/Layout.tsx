@@ -1,22 +1,21 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-
 import { Header } from "./Header";
 import SelectStore from "./SelectStore";
 
 
-const Layout: React.FC<LayoutProps> = (props) => {
+const Layout: React.FC<LayoutProps> = ({ showSelectStore } = { showSelectStore: true }) => {
   return (
     <>
       <Header />
-      <SelectStore />
+      { showSelectStore && <SelectStore /> }
       <Outlet />
     </>
   );
 };
 
 interface LayoutProps {
-  [key: string]: any;
+  showSelectStore?: boolean;
 }
 
 export default Layout;

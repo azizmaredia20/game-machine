@@ -30,31 +30,8 @@ export const logOutAction = async (navigate: NavigateFunction) => {
   }
 }
 
-
-export const registerAction = async ({ request }: { request: Request }): Promise<Response | object> => {
-  const registerFormData = await request.formData();
-  const validationErrors: { message?: string; } = {};
-
-  const confirmPassword = registerFormData.get('confirmPassword');
-  const registerData = {
-    username: registerFormData.get('username'),
-    password: registerFormData.get('password'),
-    role: registerFormData.get('role')
-  };
-
-  if (registerData.password === confirmPassword) {
-    const res = await callApi('/api/register', {
-      method: 'POST',
-      body: JSON.stringify(registerData),
-      headers: { 'Content-Type': 'application/json', 'trace-id': Date.now() }
-    });
-  
-    return redirect('/login');
-  } else {
-    validationErrors.message = "Password don't match. Please enter them again.";
-    return validationErrors;
-  }
-};
-
 export * from './gameAction';
 export * from './verifyAction';
+export * from  './expenseAction';
+export * from './createGameRoomAction';
+export * from './createUsersAction';

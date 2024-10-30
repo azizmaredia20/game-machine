@@ -1,5 +1,6 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import https from "https";
 import { fileURLToPath } from 'node:url';
 import express, { Express } from 'express';
 import cookieParser from 'cookie-parser';
@@ -21,8 +22,14 @@ const indexProd: string = isProd
 connectDB();
 
 const createServer = async () => {
+    const options = {
+        key: fs.readFileSync('/Users/azizmaredia/Desktop/Docs/Aziz/certificate/private-rsa.key', 'utf-8'),
+        cert: fs.readFileSync('/Users/azizmaredia/Desktop/Docs/Aziz/certificate/itencoders.com/3df030ad3cf2e671.crt', 'utf-8')
+    };
 
     const app: Express = express();
+
+    const httpsServer = https.createServer(options, app);
 
     app.use(express.json());
     app.use(cookieParser());
@@ -110,13 +117,16 @@ const createServer = async () => {
         }
     })
 
-    return { app, vite }
+    return { app, httpsServer, vite }
 }
 
 if (!isTest) {
-    createServer().then(({ app }) => {
+    createServer().then(({ app, httpsServer }) => {
+        httpsServer.listen(443, () => {
+            console.log('HTTPS server listening on port 443');
+        });
         app.listen(process.env.PORT || 3000, () => {
-            console.log(`Server running on http://localhost:${process.env.PORT || 3000}`);
-        })
+            console.log(`Server running on https://localhost:${process.env.PORT || 3000}`);
+        });
     })
 }

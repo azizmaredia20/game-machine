@@ -28,6 +28,7 @@ passport.use(
   new Strategy(opts, async (payload: any, done: any) => {
     try {
       const user = await UserModel.findById(payload.sub);
+
       if (user) {
         return done(null, user);
       }
