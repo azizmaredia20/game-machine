@@ -51,7 +51,7 @@
       "@hooks/*": [
         "./src/hooks/*"
       ],
-      "@types/*": [
+      "@customTypes/*": [
         "./types/*"
       ],
       "@loaders/*": [

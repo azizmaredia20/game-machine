@@ -37,7 +37,7 @@ export const login = async (req: Request, res: Response): Promise<Response<objec
         secure: process.env.NODE_ENV === 'production',
       })
       .status(200)
-      .json({ message: 'Logged in successfully' });
+      .json({ message: 'Logged in successfully', user: userExists });
   } catch (error) {
     return res
       .status(401)
@@ -64,6 +64,7 @@ export const register = async (req: Request, res: Response): Promise<Response<ob
       username: req?.body?.username,
       password: await bcrypt.hash(req?.body?.password, SALT_ROUNDS),
       role: req?.body?.role,
+      stores: req?.body?.stores
     });
 
     return res.status(201).json({
@@ -78,4 +79,22 @@ export const register = async (req: Request, res: Response): Promise<Response<ob
       message: `Unable to register the user - ${err}`
     }); 
   }
+}
+
+export const getUserData = async (req: Request, res: Response): Promise<Response<object>> => {
+  const userId = req.params.userId;
+  const authToken = req.cookies[COOKIE_JWT_KEY];
+  let user = null;
+
+  if (userId) {
+    user = await UserModal.findOne({ _id: userId });
+  } else if (authToken) {
+    const claims = jwt.verify(authToken, SECRET_TOKEN);
+
+    console.log(authToken, claims);
+  }
+
+  return res.status(200).json({
+    user
+  });
 }

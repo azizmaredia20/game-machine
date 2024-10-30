@@ -1,10 +1,11 @@
+import Register from '@screens/Auth/Register';
 import React from 'react';
 
 function CreateUsers (props: CreateUsersProps) {
   return (
-    <div>
-      Create Game Room
-    </div>
+    <>
+      <Register />
+    </>
   );
 }
 

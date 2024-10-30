@@ -44,10 +44,10 @@ const Game: React.FC<GameProps> = (_props) => {
     name: string;
     value: inputValType | selectedValueType;
   }) => {
-    const data = { ...{
+    const data = {...{
       ...formData,
       [name]: value,
-    } };
+    }};
 
     if (name === 'machineNo' && formData.machineNo !== value) {
       data.currentIn = null;
@@ -56,8 +56,6 @@ const Game: React.FC<GameProps> = (_props) => {
 
     setFormData(data);
   };
-
-  console.log('checking', getPastDate(undefined, 2));
 
   const handleSubmitForm = async (event: FormEvent<HTMLFormElement>) => {
     const formType = event?.nativeEvent?.submitter?.innerHTML;

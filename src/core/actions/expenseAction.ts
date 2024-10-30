@@ -33,7 +33,6 @@ export interface rawExpenseFormData {
 }
 
 export const submitExpenseForm = async (expenseFormData: expenseFormData) => {
-
   try {
     const params = new URLSearchParams();
     expenseFormData?.storeName && params.append('storeName', expenseFormData?.storeName);

@@ -1,13 +1,24 @@
 import React, { useState, MouseEvent, ChangeEvent } from "react";
+import { inputValType } from "./Input";
 
 const PasswordInput: React.FC<PasswordInputProps> = ({
   label,
+  name,
   isRequired,
   autoComplete,
-  handleChange,
+  onChange,
+  className,
   ...rest
 }: PasswordInputProps) => {
   const [passwordType, setPasswordType] = useState('password');
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const inputValue = event.target.value;
+    onChange({
+      name,
+      value: inputValue
+    })
+  }
 
   const togglePasswordType = (event: MouseEvent<HTMLOrSVGElement>) => {
     if (passwordType === 'password') {
@@ -18,7 +29,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
   }
 
   return (
-    <div>
+    <div className={className}>
       <label className="text-gray-800 text-sm mb-2 block">{label}</label>
       <div className="relative flex items-center">
         <input
@@ -51,10 +62,11 @@ interface PasswordInputProps {
   label: string;
   name: string;
   placeholder: string;
-  handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  onChange: (value: { name: string; value: inputValType }) => void;
   isRequired: boolean;
   autoComplete: string;
   children?: React.ReactNode;
+  className?: string;
 }
 
 export default PasswordInput;

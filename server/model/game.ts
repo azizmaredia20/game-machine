@@ -23,6 +23,6 @@ const GameSchema = new Schema({
   }
 });
 
-const GameModel = model('games', GameSchema);
+const GameModel = model('Games', GameSchema);
 
 export default GameModel;
