@@ -57,6 +57,8 @@ const Game: React.FC<GameProps> = (_props) => {
     setFormData(data);
   };
 
+  console.log('checking', getPastDate(undefined, 2));
+
   const handleSubmitForm = async (event: FormEvent<HTMLFormElement>) => {
     const formType = event?.nativeEvent?.submitter?.innerHTML;
     event.preventDefault();
