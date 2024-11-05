@@ -6,22 +6,25 @@ import PasswordInput from "@core/components/Form/PasswordInput";
 import RadioGroup from "@core/components/Form/Radio";
 import Alert from "@core/components/Alert";
 import { createUserValidation, submitCreateUserForm } from "@core/actions";
-import CheckBoxGroup from "@core/components/Form/Checkbox";
-import { STORES } from "@client/config";
+import CheckBoxGroup, { Option } from "@core/components/Form/Checkbox";
+import useAppContext from "@hooks/useAppContext";
 
-const Register: React.FC<RegisterProps> = ({ stores }) => {
+const DEFAULT_FORM_DATA = {
+  username: "",
+  password: "",
+  confirmPassword: "",
+  role: "USER",
+  stores: []
+};
+
+const Register: React.FC<RegisterProps> = (props: RegisterProps) => {
   const [validationMessage, setValidationMessage] = useState<
     string | undefined
   >();
   const [params, _] = useSearchParams();
+  const { appState } = useAppContext();
 
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-    confirmPassword: "",
-    role: "USER",
-    stores: []
-  });
+  const [formData, setFormData] = useState(DEFAULT_FORM_DATA);
 
   const handleChange = ({
     name,
@@ -46,7 +49,8 @@ const Register: React.FC<RegisterProps> = ({ stores }) => {
 
     if (isValid) {
       const res = await submitCreateUserForm(formData);
-
+      setFormData({...DEFAULT_FORM_DATA});
+      event?.target?.reset();
       if (res instanceof Error) {
         setValidationMessage(res.message);
       }
@@ -83,8 +87,8 @@ const Register: React.FC<RegisterProps> = ({ stores }) => {
 
             <CheckBoxGroup
               name="stores" 
-              label="Assign Stores to User" 
-              options={STORES} 
+              label="Assign Stores" 
+              options={appState?.gameRooms as Option[]} 
               onChange={handleChange}
             />
 
@@ -124,7 +128,7 @@ const Register: React.FC<RegisterProps> = ({ stores }) => {
                 type="submit"
                 className="w-full py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
               >
-                Sign in
+                Register
               </button>
             </div>
           </form>

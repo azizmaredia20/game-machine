@@ -20,3 +20,9 @@ export type Store = {
     readonly label: string;
     readonly value: string;
 }
+
+export type User = {
+    role: 'ADMIN' | 'USER' | null;
+    username?: string;
+    stores: string[];
+}

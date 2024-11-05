@@ -4,16 +4,16 @@ import "react-datepicker/dist/react-datepicker.css";
 import Input, { inputValType } from "@core/components/Form/Input";
 import Alert from "@core/components/Alert";
 import Datepicker from "@core/components/Form/Datepicker";
-import useStoreContext from "@hooks/useStoreContext";
+import useAppContext from "@hooks/useAppContext";
 import { verifyDataValidation, submitVerifyForm } from "@core/actions";
 
 type valueType = string | number | readonly string[] | undefined | null;
 
 const Verify: React.FC<VerifyProps> = (_props) => {
-  const { store } = useStoreContext();
+  const { appState } = useAppContext();
 
   const [formData, setFormData] = useState({
-    storeName: store?.value,
+    storeName: appState?.selectedGameRoom?.value,
     date: new Date().toISOString(),
     cashFromMachines: null,
     cashInHand: null,
@@ -62,6 +62,7 @@ const Verify: React.FC<VerifyProps> = (_props) => {
 
         <Datepicker
           label="Select Today's Date"
+          className="py-2"
           name="date"
           minDate={new Date()}
           defaultValue={new Date()}

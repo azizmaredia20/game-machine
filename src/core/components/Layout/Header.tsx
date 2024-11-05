@@ -1,23 +1,37 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { logOutAction } from "@client/core/actions"
+import useAppContext from "@hooks/useAppContext";
 
 export interface HeaderProps {}
 
-const menuItemns = [
-  { display: "Game", link: "/" },
-  { display: "Insert Data", link:"/admin-data" },
-  { display: "Create Game Room", link:"/game-room" },
-  { display: "Create Users", link:"/create-user" },
-  { display: "Expenses", link: "/expenses" },
-  { display: "Cash Verification", link: "/verify" },
-  { display: "Daily Report", link: "/report" },
-  { display: "Summary Report", link:"/summary" }
-];
+const getMenuItems = (role: string | null) => {
+  if (role === 'ADMIN'){
+    return [
+      { display: "Game", link: "/" },
+      { display: "Insert Data", link:"/admin-data" },
+      { display: "Create Game Room", link:"/game-room" },
+      { display: "Create Users", link:"/create-user" },
+      { display: "Expenses", link: "/expenses" },
+      { display: "Cash Verification", link: "/verify" },
+      { display: "Daily Report", link: "/report" },
+      { display: "Summary Report", link:"/summary" }
+    ];
+  } else {
+    return [
+      { display: "Game", link: "/" },
+      { display: "Expenses", link: "/expenses" },
+      { display: "Cash Verification", link: "/verify" },
+      { display: "Daily Report", link: "/report" },
+      { display: "Summary Report", link:"/summary" }
+    ];
+  }
+}
 
 export function Header(props: HeaderProps) {
   const [display, setDisplay] = useState("none");
   const navigate = useNavigate();
+  const { appState, dispatch } = useAppContext();
 
   const toggleMenu = () => {
     if (display === "block") {
@@ -40,7 +54,7 @@ export function Header(props: HeaderProps) {
             {/* <li className="max-lg:py-3 px-3">
               
             </li> */}
-            {menuItemns.map(({ display, link }) => (
+            {getMenuItems(appState?.role).map(({ display, link }) => (
               <li
                 key={display}
                 className="max-lg:border-b max-lg:py-3 px-3"
@@ -64,7 +78,7 @@ export function Header(props: HeaderProps) {
             </a>
           </button>
           <button
-            onClick={() => { logOutAction(navigate) }}
+            onClick={() => { logOutAction(navigate, dispatch) }}
             className="px-4 py-2 text-sm rounded-sm font-bold text-white border-2 border-[#007bff] bg-[#007bff] transition-all ease-in-out duration-300 hover:bg-transparent hover:text-[#007bff]">
             Log Out
           </button>

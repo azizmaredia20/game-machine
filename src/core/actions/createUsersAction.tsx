@@ -1,4 +1,4 @@
-import { StoreContext } from "@core/contexts/StoreContext";
+import { StoreContext } from "@core/contexts/AppContext";
 import { Store } from "@customTypes/index";
 import { callApi } from "@utils/index";
 

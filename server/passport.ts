@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import passport from "passport";
 import { Strategy } from "passport-jwt";
 import UserModel from "./model/user";
-import { ADMIN, COOKIE_JWT_KEY, SECRET_TOKEN, USER } from "./config";
+import { ADMIN, COOKIE_JWT_KEY, SECRET_TOKEN } from "./config";
 
 export type User = {
   sub: string,

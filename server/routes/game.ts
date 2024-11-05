@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { authorize } from 'server/passport';
+import { authorize } from '../passport';
 import { readGameData, readGameDataByMachine, updateGameDataByMachine, postGameData } from '../controllers';
 
 export const gameRouter = Router();

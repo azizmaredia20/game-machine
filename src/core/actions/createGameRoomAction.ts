@@ -1,12 +1,10 @@
 import { callApi } from "@utils/index";
 
 export interface createGameRoomFormData {
-  gameRoom: {
-    label: string;
-    value: string, 
-  },
-  totalMachines: number,
-  shifts: number,
+  label: string;
+  value: string;
+  totalMachines: number;
+  shifts: number;
 }
 
 export interface rawGameRoomFormData {
@@ -34,10 +32,8 @@ export const parseGameRoomFormData = (formData: { name: string; totalMachines: n
   const label = formData?.name;
   const value = label?.replace(/\s+/g, '').toUpperCase();
   return {
-    gameRoom: {
-      label,
-      value,
-    },
+    label,
+    value,
     totalMachines: formData?.totalMachines,
     shifts: formData?.shifts,
   }

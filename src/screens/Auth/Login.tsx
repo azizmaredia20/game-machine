@@ -1,14 +1,35 @@
-import React, { useState } from "react";
-import { Form } from "react-router-dom";
+import React, { useEffect, FormEvent, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ChangeEvent, MouseEvent } from "react";
+import { loginFormValidateion, loginAction } from "@core/actions";
+import Alert from "@core/components/Alert";
+import { loginLoader } from "@loaders/loginLoader";
+import Spinner from "@core/components/Spinner";
 
-const Login: React.FC<LoginProps> = (props) => {
+const Login: React.FC<LoginProps> = (props: LoginProps) => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
+  const [validationMessage, setValidationMessage] = useState<
+    string | undefined
+  >();
+  const [passwordType, setPasswordType] = useState("password");
+  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
-  const [passwordType, setPasswordType] = useState('password')
+  useEffect(() => {
+    setIsLoading(true);
+    loginLoader()
+      .then(userData => {
+        if (userData?.role){
+          window.history.back();
+        }
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  },[]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const data = {
@@ -19,11 +40,28 @@ const Login: React.FC<LoginProps> = (props) => {
   };
 
   const togglePasswordType = (event: MouseEvent<HTMLOrSVGElement>) => {
-    if (passwordType === 'password') {
-      setPasswordType('text');
+    if (passwordType === "password") {
+      setPasswordType("text");
     } else {
-      setPasswordType('password');
+      setPasswordType("password");
     }
+  };
+
+  const handleLoginForm = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setValidationMessage("");
+
+    const { isValid, message } = loginFormValidateion(formData);
+
+    if (isValid) {
+      loginAction(formData, navigate);
+    } else {
+      setValidationMessage(message);
+    }
+  };
+
+  if (isLoading) {
+    return <Spinner />
   }
 
   return (
@@ -33,9 +71,16 @@ const Login: React.FC<LoginProps> = (props) => {
           <div className="max-w-md w-full">
             <div className="p-8 rounded-2xl bg-white shadow">
               <h2 className="text-gray-800 text-center text-2xl font-bold">
-                Sign in
+                Log in
               </h2>
-              <Form method="post" action="/login" className="mt-8 space-y-4" noValidate>
+              <form
+                className="mt-8 space-y-4"
+                noValidate
+                onSubmit={handleLoginForm}
+              >
+                {!!validationMessage && (
+                  <Alert type="ERROR" message={validationMessage} />
+                )}
                 <div>
                   <label className="text-gray-800 text-sm mb-2 block">
                     User name
@@ -109,7 +154,7 @@ const Login: React.FC<LoginProps> = (props) => {
                     Sign in
                   </button>
                 </div>
-              </Form>
+              </form>
             </div>
           </div>
         </div>

@@ -1,15 +1,15 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { ChangeEvent } from "react";
 
 export type selectedValueType = string | number | readonly string[] | undefined;
 
-interface Option {
+export interface Option {
   value: selectedValueType;
   label: string;
 }
 
 interface SelectProps {
   options: Option[];
-  defaultValue: selectedValueType;
+  value: selectedValueType;
   className?: string;
   label: string;
   labelClassName?: string;
@@ -19,17 +19,16 @@ interface SelectProps {
 
 const Dropdown: React.FC<SelectProps> = ({
   options,
-  defaultValue,
+  value,
   label,
   className,
   labelClassName,
   name,
   onChange,
 }) => {
-  const [selectedItem, setSelectedItem] = useState<selectedValueType>(defaultValue);
+  
 
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    setSelectedItem(e.target.value);
     onChange({
       name,
       value: e.target.value,
@@ -42,7 +41,7 @@ const Dropdown: React.FC<SelectProps> = ({
       <div className="relative flex items-center">
         <select
           name={name}
-          value={selectedItem}
+          value={value}
           onChange={handleChange}
           className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
         >

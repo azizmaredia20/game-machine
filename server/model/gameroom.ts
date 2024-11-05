@@ -1,26 +1,26 @@
 import { Schema, model } from "mongoose";
 
-const GameSchema = new Schema({
-  gameRoom: {
-    label: {
-      type: String,
-      required: true,
-    },
-    value: {
-      type: String,
-      required: true,
-    }
+const GameRoomSchema = new Schema({
+  label: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  value: {
+    type: String,
+    required: true,
+    unique: true,
   },
   totalMachines: {
     type: Number,
-    required: true
+    required: true,
   },
   shifts: {
     type: Number,
-    required: true
-  }
+    required: true,
+  },
 });
 
-const GameModel = model('GameRoom', GameSchema);
+const GameRoomModel = model("GameRoom", GameRoomSchema);
 
-export default GameModel;
+export default GameRoomModel;

@@ -25,6 +25,6 @@ export const formatDate = (date: Date | null, locale: string = "en-US") : string
 }).format(date);
 
 export const getPastDate = (date: Date = new Date(), noOfDays: number) => {
-  const past2DayMill =  (new Date(date)).getTime() - (2 * 24 * 60 * 60 * 1000);
+  const past2DayMill =  (new Date(date)).getTime() - (noOfDays * 24 * 60 * 60 * 1000);
   return new Date(past2DayMill)
 }

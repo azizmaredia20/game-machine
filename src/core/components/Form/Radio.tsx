@@ -17,7 +17,7 @@ const Radio: React.FC<RadioProps> = ({ label, value, onChange, checked }) => {
         checked={checked} 
         onChange={(e) => onChange(e.target.value)}
       />
-      <label className="text-sm text-gray-400 ml-2">{label}</label>
+      <label className="text-sm text-gray-800 ml-2">{label}</label>
     </div>
   );
 };

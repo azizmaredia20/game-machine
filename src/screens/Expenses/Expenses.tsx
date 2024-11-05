@@ -5,20 +5,19 @@ import Input, { inputValType } from "@core/components/Form/Input";
 import Select, { selectedValueType } from "@core/components/Form/Select";
 import TextArea, { textAreaValType } from "@core/components/Form/TextArea";
 import Alert from "@core/components/Alert";
-import { SHIFT_NO } from "@client/config";
 import Datepicker from "@core/components/Form/Datepicker";
-import useStoreContext from "@hooks/useStoreContext";
 import { formatDate } from "@utils/index";
 import { expenseDataValidation, submitExpenseForm, parsedFormData } from "@core/actions/expenseAction";
+import useAppContext from "@hooks/useAppContext";
 
 type valueType = string | number | readonly string[] | undefined | null;
 
 const Expenses: React.FC<ExpensesProps> = (_props) => {
-  const { store } = useStoreContext();
+  const { appState } = useAppContext();
   const [ validationMessage, setValidationMessage ] = useState<string | undefined>();
 
   const [formData, setFormData] = useState({
-    storeName: store?.value,
+    storeName: appState?.selectedGameRoom?.value,
     shiftNo: 1,
     date: formatDate(new Date()),
     employeePay: null,
@@ -87,10 +86,10 @@ const Expenses: React.FC<ExpensesProps> = (_props) => {
           <Alert type="ERROR" message={validationMessage} />
         )}
 
-        <input type="hidden" id="storeName" name="storeName" value={store?.value} />
-
         <Datepicker
+          className="py-2"
           label="Select Today's Date"
+          labelClassName="text-gray-800 text-sm mb-2 block"
           name="date"
           minDate={new Date}
           defaultValue={new Date} 
@@ -101,10 +100,10 @@ const Expenses: React.FC<ExpensesProps> = (_props) => {
           label="Select Shift"
           name="shiftNo"
           className="py-2"
-          defaultValue={formData?.shiftNo}
+          value={formData?.shiftNo}
           labelClassName="text-gray-800 text-sm mb-2 block"
           onChange={handleChange}
-          options={Array.from({ length: SHIFT_NO }, (_, i) => i + 1).map(
+          options={Array.from({ length: appState?.selectedGameRoom?.shifts as number }, (_, i) => i + 1).map(
             (no) => ({ label: `Shift ${no}`, value: no })
           )}
         />

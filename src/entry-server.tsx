@@ -8,7 +8,7 @@ import {
 import { HelmetProvider } from "react-helmet-async";
 import App from "./App";
 import routes from "@core/routes";
-import StoreContextProvider from "@core/contexts/StoreContext";
+import StoreContextProvider from "@core/contexts/AppContext";
 
 const render = async (req: express.Request) => {
   const helmetContext = {};

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { authorize } from 'server/passport';
+import { authorize } from '../passport';
 import { readExpensesDataByShift, postExpensesData } from '../controllers';
 
 export const expensesRouter = Router();

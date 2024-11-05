@@ -4,21 +4,20 @@ import "react-datepicker/dist/react-datepicker.css";
 import Input, { inputValType } from "@core/components/Form/Input";
 import Select, { selectedValueType } from "@core/components/Form/Select";
 import Alert from "@core/components/Alert";
-import { TOTAL_MACHINE } from "@client/config";
 import Datepicker from "@core/components/Form/Datepicker";
-import useStoreContext from "@hooks/useStoreContext";
 import { gameDataValidation, submitGameForm, updateGameForm, loadSubmittedData, GameResult } from "@core/actions/gameAction";
 import { formatDate, getPastDate } from '@utils/index';
+import useAppContext from "@hooks/useAppContext";
 
 type valueType = string | number | readonly string[] | undefined | null;
 
 const Game: React.FC<GameProps> = (_props) => {
   const [ validationMessage, setValidationMessage ] = useState<string | undefined>();
   const [submittedMachines, setSubmittedMachines] = useState<number[] | null>(null);
-  const { store } = useStoreContext();
+  const { appState } = useAppContext();
 
   const defaultFormData = {
-    storeName: store.value,
+    storeName: appState?.selectedGameRoom?.value,
     date: formatDate(new Date()),
     machineNo: 1,
     currentIn: null,
@@ -28,6 +27,7 @@ const Game: React.FC<GameProps> = (_props) => {
 
   useEffect(() => {
     (async () => {
+      formData.storeName = appState?.selectedGameRoom?.value;
       const submittedMachines = await loadSubmittedData(formData)
       if (Array.isArray(submittedMachines)) {
         const machines = submittedMachines.map(({ machineNo }: GameResult) => machineNo )
@@ -35,7 +35,7 @@ const Game: React.FC<GameProps> = (_props) => {
       }
     })();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formData.date, formData.storeName]);
+  }, [formData.date, appState?.selectedGameRoom]);
 
   const handleChange = async ({
     name,
@@ -57,12 +57,11 @@ const Game: React.FC<GameProps> = (_props) => {
     setFormData(data);
   };
 
-  console.log('checking', getPastDate(undefined, 2));
-
   const handleSubmitForm = async (event: FormEvent<HTMLFormElement>) => {
     const formType = event?.nativeEvent?.submitter?.innerHTML;
     event.preventDefault();
     setValidationMessage('');
+    formData.storeName = appState?.selectedGameRoom?.value;
 
     const { isValid, message } = gameDataValidation(formData);
 
@@ -77,8 +76,17 @@ const Game: React.FC<GameProps> = (_props) => {
       if (res instanceof Error) {
         setValidationMessage(res.message);
       } else if (formType === 'Submit') {
-        const updateSubmitteMachines = [...(submittedMachines as number[]), parseInt(res.machineNo)];
+        const submittedMachineNo = parseInt(res.machineNo);
+        const updateSubmitteMachines = [...(submittedMachines as number[]), submittedMachineNo];
         setSubmittedMachines(updateSubmitteMachines);
+      
+        // Reset Form fields
+        const newFormData = { ...formData };
+        newFormData.currentIn = null;
+        newFormData.currentOut = null;
+        newFormData.machineNo = (submittedMachineNo < appState?.selectedGameRoom?.totalMachines) ?
+          submittedMachineNo + 1 : submittedMachineNo;
+        setFormData(newFormData);
       }
     } else {
       setValidationMessage(message);
@@ -88,7 +96,7 @@ const Game: React.FC<GameProps> = (_props) => {
   return (
     <div className="container mx-auto p-8 text-center">
       <div className="inline-block">
-        {Array.from({ length: TOTAL_MACHINE }, (_, i) => i + 1).map(
+        {Array.from({ length: appState?.selectedGameRoom?.totalMachines as number }, (_, i) => i + 1).map(
           (number) => (
             <div
               key={`machine-${number}`}
@@ -105,10 +113,10 @@ const Game: React.FC<GameProps> = (_props) => {
           <Alert type="ERROR" message={validationMessage} />
         )}
 
-        {/* <input type="hidden" id="storeName" name="storeName" value={store?.value} /> */}
-
         <Datepicker
+          className="py-2"
           label="Select Today's Date"
+          labelClassName="text-gray-800 text-sm mb-2 block"
           name="date"
           minDate={getPastDate(undefined, 2)}
           defaultValue={new Date} 
@@ -119,10 +127,10 @@ const Game: React.FC<GameProps> = (_props) => {
           label="Select Machine Number"
           name="machineNo"
           className="py-2"
-          defaultValue={formData?.machineNo}
+          value={formData?.machineNo}
           labelClassName="text-gray-800 text-sm mb-2 block"
           onChange={handleChange}
-          options={Array.from({ length: TOTAL_MACHINE }, (_, i) => i + 1).map(
+          options={Array.from({ length: appState?.selectedGameRoom?.totalMachines as number }, (_, i) => i + 1).map(
             (no) => ({ label: `Machine ${no}`, value: no })
           )}
         />

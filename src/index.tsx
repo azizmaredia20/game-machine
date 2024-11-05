@@ -3,7 +3,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import App from './App'
 import routes from '@core/routes'
-import StoreContextProvider from '@core/contexts/StoreContext'
+import AppContextProvider from '@core/contexts/AppContext'
 
 const router = createBrowserRouter(routes);
 
@@ -12,10 +12,10 @@ const context = {}
 ReactDOM.hydrateRoot(
 	document.getElementById("app") as HTMLElement,
 	<HelmetProvider context={context}>
-		<StoreContextProvider>
+		<AppContextProvider>
 			<App>
 				<RouterProvider router={router} fallbackElement={null} />
 			</App>
-		</StoreContextProvider>
+		</AppContextProvider>
 	</HelmetProvider>
 )

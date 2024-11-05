@@ -82,19 +82,26 @@ export const register = async (req: Request, res: Response): Promise<Response<ob
 }
 
 export const getUserData = async (req: Request, res: Response): Promise<Response<object>> => {
-  const userId = req.params.userId;
+  let userId = req.params.userId;
   const authToken = req.cookies[COOKIE_JWT_KEY];
-  let user = null;
 
-  if (userId) {
-    user = await UserModal.findOne({ _id: userId });
-  } else if (authToken) {
-    const claims = jwt.verify(authToken, SECRET_TOKEN);
-
-    console.log(authToken, claims);
+  try {
+    if (authToken) {
+      const claims = jwt.verify(authToken, SECRET_TOKEN);
+      userId = claims?.sub as string;
+    }
+    if (!userId) {
+      throw new Error('Cannot find user without valid userId or authToken');
+    };
+    const user = await UserModal.findOne({ _id: userId }).select({ "_id": 0, "password": 0, "__v": 0 });
+    
+    return res.status(200).json(user);
+  } catch(e) {
+    const message = `Failed to get user data ${e}`
+    return res
+      .status(500)
+      .json({
+        message
+      });
   }
-
-  return res.status(200).json({
-    user
-  });
 }

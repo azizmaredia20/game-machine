@@ -3,30 +3,30 @@ import type { RouteObject } from "react-router-dom";
 import loadable from '@loadable/component'
 
 import Login from "@screens/Auth/Login";
-import Register from "@screens/Auth/Register";
 import Layout from "@core/components/Layout/Layout";
 import CreateGameRoom from "@screens/Game/CreateGameRoom";
 import CreateUsers from "@screens/Game/CreateUsers";
-import DailyReport from "@screens/Report/DailyReport";
 import SummaryReport from "@screens/Report/SummaryReport";
 import Spinner from "@core/components/Spinner";
-import { loginAction } from "./actions";
-import { loginLoader, gameLoader } from "@loaders/index";
+import { gameLoader } from "@loaders/index";
 
 const Verify = loadable(() => import("@screens/Verify/Verify"), { fallback: <div><Spinner /></div> });
 const Game = loadable(() => import("@screens/Game/Game"), { fallback: <div><Spinner /></div> });
 const Expenses = loadable(() => import("@screens/Expenses/Expenses"), { fallback: <div><Spinner /></div> });
+const DailyReport = loadable(() => import("@screens/Report/DailyReport"), { fallback: <div><Spinner /></div> });
 
 const routes: RouteObject[] = [
     {
         path: "/login",
-        element: <Login />,
-        action: loginAction,
-        loader: loginLoader
+        element: <Login />
     },
     {
-        element: <Layout showSelectStore={false} />,
+        element: <Layout validateAdminRoutes />,
         children: [
+            {
+                path: "/admin-data",
+                element: <Game />
+            },
             {
                 path: "game-room",
                 element: <CreateGameRoom />
@@ -39,16 +39,12 @@ const routes: RouteObject[] = [
     },
     {
         path: "/",
-        element: <Layout />,
+        element: <Layout showSelectStore />,
         children: [
             {
                 index: true,
                 element: <Game />,
                 loader: gameLoader,
-            },
-            {
-                path: "/admin-data",
-                element: <Game />
             },
             {
                 path: "expenses",

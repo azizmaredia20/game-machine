@@ -1,4 +1,4 @@
-import { StoreContext } from "@core/contexts/StoreContext";
+import { StoreContext } from "@core/contexts/AppContext";
 import { callApi } from "@utils/index";
 import { isValid } from "react-datepicker/dist/date_utils";
 

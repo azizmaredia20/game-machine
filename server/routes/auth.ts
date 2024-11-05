@@ -1,11 +1,12 @@
 import { Router } from 'express';
 import { login, logout, register, getUserData } from '../controllers';
-import { authorizeAdmin } from 'server/passport';
-import { SECRET_TOKEN } from 'server/config';
+import { authorizeAdmin } from '../passport';
+import { SECRET_TOKEN } from '../config';
 
 export const authRouter = Router();
 
 authRouter.post('/login', login);
+authRouter.get('/user', getUserData);
 authRouter.get('/user/:userId', getUserData);
 authRouter.get('/logout', logout);
 authRouter.post('/register', authorizeAdmin, register);

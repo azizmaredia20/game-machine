@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-interface Option {
+export interface Option {
   isChecked?: boolean;
   label: string;
   value: any;

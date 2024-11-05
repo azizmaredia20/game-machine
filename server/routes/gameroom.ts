@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { authorizeAdmin } from '../passport';
-import { postGameRoomData } from '../controllers';
+import { postGameRoomData, readGameRoomData } from '../controllers';
 
 export const gameRoomRouter = Router();
 
-// gameRoomRouter.use('/gameroom', authorizeAdmin);
-gameRoomRouter.post('/gameroom', postGameRoomData);
+gameRoomRouter.post('/gameroom', authorizeAdmin, postGameRoomData);
+gameRoomRouter.get('/gameroom', readGameRoomData);
